@@ -14,14 +14,20 @@ const breedAyamSchema = new mongoose.Schema({
   deskripsi: {
     type: String
   },
-  // Properti spesifik breed (contoh)
+  // ---- Properti spesifik breed (contoh) ----
+  
+  // Ayam petelur
   masaPanenTelurAwalHari: Number,
   masaPanenTelurAkhirHari: Number,
   rataRataTelurPerMinggu: Number,
+
+  // Ayam pedaging
   masaPanenDagingHari: Number,
   rataRataBeratPanenGr: Number,
-  rekomendasiPakanHarianGr: Number,
+  // -------------------------------------------
+  
   // Overrides untuk lingkungan spesifik breed
+  rekomendasiPakanHarianGr: Number,
   rekomendasiKelembabanMin: Number,
   rekomendasiKelembabanMax: Number,
   rekomendasiSuhuMin: Number,
