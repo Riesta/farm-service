@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-//todo paki env
+
 const jwtSecret = process.env.JWT_SECRET;
 const authenticate = async (req, res, next) => {
   const token =
@@ -8,10 +8,7 @@ const authenticate = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, jwtSecret);
-    const user = await User.findById(decoded.id);
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    req.user = user;
+    req.userid = decoded.id;
     next();
   } catch (err) {
     res.status(403).json({ message: "Invalid token" });
