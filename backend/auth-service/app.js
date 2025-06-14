@@ -8,7 +8,7 @@ const app = express();
 app.use(bodyParser.json());
 
 connectDB(); // 🔌 Koneksi ke MongoDB Atlas
-app.use("/api/auth", authRoutes);
+app.use("/", authRoutes);
 
 app.listen(port, () => {
   console.log(`Server Berjalan pada port ${port}`);
