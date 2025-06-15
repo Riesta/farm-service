@@ -3,8 +3,9 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
 // Import routes
-const jenisAyamRoutes = require("./routes/JenisAyam"); // ✅ Tambahan
-const breedAyamRoutes = require("./routes/BreedAyam");
+const ayamRoutes = require("./routes/Ayam");
+const kandangRoutes = require("./routes/Kandang");
+const batchAyamRoutes = require("./routes/BatchAyam");
 
 // Load environment variables
 dotenv.config();
@@ -19,9 +20,10 @@ app.use(express.json());
 connectDB();
 
 // Routing utama
-app.use("/api/jenis-ayam", jenisAyamRoutes); // ✅ Tambahan
-app.use("/api/breed-ayam", breedAyamRoutes);
+app.use("/api/ayam", ayamRoutes);
+app.use("/api/kandang", kandangRoutes);
+app.use("/api/batchAyam", batchAyamRoutes);
 
 // Port dan jalankan server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
