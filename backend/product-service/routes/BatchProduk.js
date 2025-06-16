@@ -24,9 +24,10 @@ router.get("/", authenticateJWT, async (req, res) => {
     const data = await BatchProduk.find();
     res.json(data);
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Gagal mengambil data", error: err.message });
+    res.status(500).json({
+      message: "Gagal mengambil data",
+      error: err.message,
+    });
   }
 });
 

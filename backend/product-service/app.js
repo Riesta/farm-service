@@ -3,12 +3,12 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
 // Import routes
-const produkRoutes = require("./routes/Produk");
-// const kandangRoutes = require("./routes/Kandang");
-const batchProdukRoutes = require("./routes/BatchProduk");
+const produkRoutes = require("./routes/produk");
+const storageRoutes = require("./routes/storage");
+const batchProdukRoutes = require("./routes/batchProduk");
 
 // Load environment variables
-dotenv.config();
+const { port } = require("./config");
 
 // Inisialisasi Express
 const app = express();
@@ -20,10 +20,9 @@ app.use(express.json());
 connectDB();
 
 // Routing utama
-app.use("/api/produk/produk", produkRoutes);
-// app.use("/api/farm/kandang", kandangRoutes);
-app.use("/api/produk/batchProduk", batchProdukRoutes);
+app.use("/api/product/produk", produkRoutes);
+app.use("/api/farm/storage", storageRoutes);
+app.use("/api/product/batchProduk", batchProdukRoutes);
 
 // Port dan jalankan server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(port, () => console.log(`Server running on port ${port}`));

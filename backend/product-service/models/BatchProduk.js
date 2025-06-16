@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const batchProdukSchema = new mongoose.Schema(
   {
     batchAyamId: {
-      type: mongoose.Schema.Types.ObjectId,       // batchAyamId, produkId harus gabungan unik
+      type: mongoose.Schema.Types.ObjectId, // batchAyamId, produkId harus gabungan unik
       ref: "BatchAyam",
       required: true,
     },
@@ -33,17 +33,14 @@ const batchProdukSchema = new mongoose.Schema(
     tanggalMasuk: {
       type: Date,
       default: Date.now,
-      required: true
+      required: true,
     },
   },
   { timestamps: true }
 );
 
 // --- Index unik gabungan batchAyamId dan produkId ---
-batchProdukSchema.index(
-  { batchAyamId: 1, produkId: 1 },
-  { unique: true }
-);
+batchProdukSchema.index({ batchAyamId: 1, produkId: 1 }, { unique: true });
 
 // --- Index unik gabungan batchAyamId, produkId, dan storageId ---
 batchProdukSchema.index(

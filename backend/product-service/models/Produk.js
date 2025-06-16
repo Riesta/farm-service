@@ -6,7 +6,7 @@ const produkSchema = new mongoose.Schema(
       type: String,
       enum: ["karkas", "dada", "paha", "sayap", "telur", "telur omega"],
       required: true,
-      unique: true
+      unique: true,
     },
     masaSimpanHari: {
       type: Number,

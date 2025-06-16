@@ -10,9 +10,10 @@ router.get("/", authenticateJWT, async (req, res) => {
     const storage = await Storage.find();
     res.json(storage);
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Gagal mengambil data storage", error: err.message });
+    res.status(500).json({
+      message: "Gagal mengambil data storage",
+      error: err.message,
+    });
   }
 });
 
@@ -21,11 +22,15 @@ router.post("/", authenticateJWT, async (req, res) => {
   try {
     const storageBaru = new Storage(req.body);
     await storageBaru.save();
-    res.status(201).json({ message: "Storage ditambahkan", data: storageBaru });
+    res.status(201).json({
+      message: "Storage ditambahkan",
+      data: storageBaru,
+    });
   } catch (err) {
-    res
-      .status(400)
-      .json({ message: "Gagal menambahkan storage", error: err.message });
+    res.status(400).json({
+      message: "Gagal menambahkan storage",
+      error: err.message,
+    });
   }
 });
 

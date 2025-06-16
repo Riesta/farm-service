@@ -22,6 +22,11 @@ app.use(
   authenticate,
   setupServiceProxy("/api/farm/", "http://localhost:5000/")
 );
+app.use(
+  "/api/product",
+  authenticate,
+  setupServiceProxy("/api/product/", "http://localhost:4000/")
+);
 
 app.listen(PORT, () => {
   console.log(`API Gateway berjalan di port ${PORT}`);

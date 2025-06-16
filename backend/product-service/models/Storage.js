@@ -4,7 +4,7 @@ const storageSchema = new mongoose.Schema(
   {
     tipe: {
       type: String,
-      enum: ["daging", "telur"],    // tipe dan rak harus unik
+      enum: ["daging", "telur"], // tipe dan rak harus unik
       required: true,
     },
     rak: {
@@ -20,15 +20,12 @@ const storageSchema = new mongoose.Schema(
       type: String,
       enum: ["aktif", "kosong", "perawatan"],
       required: true,
-    }
+    },
   },
   { timestamps: true }
 );
 
 // --- Index unik gabungan tipe dan rak  ---
-storageSchema.index(
-  { tipe: 1, rak: 1 }, 
-  { unique: true }     
-);
+storageSchema.index({ tipe: 1, rak: 1 }, { unique: true });
 
 module.exports = mongoose.model("Storage", storageSchema);
