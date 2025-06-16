@@ -39,17 +39,7 @@ const batchAyamSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    required: true
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-    required: true
-  },
-});
+  }, { timestamps: true });
 
 // ✅ Tambahkan baris ini
 module.exports = mongoose.model("BatchAyam", batchAyamSchema);

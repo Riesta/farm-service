@@ -4,7 +4,7 @@ const { authenticateJWT } = require("../middleware/authenticateJWT");
 
 const router = express.Router();
 
-// 📄 GET semua kandang
+//GET
 router.get("/", authenticateJWT, async (req, res) => {
   try {
     const kandang = await Kandang.find();
@@ -16,7 +16,7 @@ router.get("/", authenticateJWT, async (req, res) => {
   }
 });
 
-// ➕ POST tambah kandang
+//POST
 router.post("/", authenticateJWT, async (req, res) => {
   try {
     const kandangBaru = new Kandang(req.body);
@@ -29,7 +29,7 @@ router.post("/", authenticateJWT, async (req, res) => {
   }
 });
 
-// ✏️ PUT update kandang
+//PUT
 router.put("/:id", authenticateJWT, async (req, res) => {
   try {
     const updated = await Kandang.findByIdAndUpdate(req.params.id, req.body, {
@@ -45,7 +45,7 @@ router.put("/:id", authenticateJWT, async (req, res) => {
   }
 });
 
-// ❌ DELETE hapus kandang
+//DELETE
 router.delete("/:id", authenticateJWT, async (req, res) => {
   try {
     const deleted = await Kandang.findByIdAndDelete(req.params.id);
