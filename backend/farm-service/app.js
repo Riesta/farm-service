@@ -20,9 +20,9 @@ app.use(express.json());
 connectDB();
 
 // Routing utama
-app.use("/api/ayam", ayamRoutes);
-app.use("/api/kandang", kandangRoutes);
-app.use("/api/batchAyam", batchAyamRoutes);
+app.use("/api/farm/ayam", ayamRoutes);
+app.use("/api/farm/kandang", kandangRoutes);
+app.use("/api/farm/batchAyam", batchAyamRoutes);
 
 // Port dan jalankan server
 const PORT = process.env.PORT || 5000;

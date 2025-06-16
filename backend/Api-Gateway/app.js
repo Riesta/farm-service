@@ -17,6 +17,11 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/api/auth", setupServiceProxy("/api/auth/", "http://localhost:3000/"));
+app.use(
+  "/api/farm",
+  authenticate,
+  setupServiceProxy("/api/farm/", "http://localhost:5000/")
+);
 
 app.listen(PORT, () => {
   console.log(`API Gateway berjalan di port ${PORT}`);

@@ -8,11 +8,7 @@ const authenticate = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, jwtSecret);
-    const userId = decoded.id;
-
-    if (!userId) return res.status(404).json({ message: "User not found" });
-
-    req.user = userId;
+    req.user = decoded;
     next();
   } catch (err) {
     res.status(403).json({ message: "Invalid token" });
