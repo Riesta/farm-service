@@ -6,7 +6,10 @@ const { jwtSecret, jwtExpiresIn } = require("../config");
 const User = require("../models/user");
 
 const authenticateJWT = require("../middleware/authenticate");
+const { validate } = require("../middleware/validateData");
 
+const { registerRules } = require("../dataRules/registerRules");
+const { loginRules } = require("../dataRules/loginRules");
 const router = express.Router();
 
 // 🔐 Generate JWT
@@ -24,7 +27,7 @@ const generateToken = (user) => {
 };
 
 // 📝 REGISTER USER
-router.post("/register", async (req, res) => {
+router.post("/register", registerRules(), validate, async (req, res) => {
   const { username, email, password, name, role } = req.body;
 
   try {
@@ -61,7 +64,7 @@ router.post("/register", async (req, res) => {
 });
 
 // 🔑 LOGIN USER
-router.post("/login", async (req, res) => {
+router.post("/login", loginRules(), validate, async (req, res) => {
   const { username, password } = req.body;
   try {
     const user = await User.findOne({ username });
