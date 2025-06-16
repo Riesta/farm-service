@@ -13,6 +13,7 @@
   "license": "ISC",
   "description": "API Gateway for Farm Service",
   "dependencies": {
+    "apicache": "^1.6.3",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "express-rate-limit": "^7.5.0",
