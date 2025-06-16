@@ -44,12 +44,12 @@ const ayamSchema = new mongoose.Schema({
       max: { type: Number, required: true },
     }
   },
-  // Untuk Petelur
+  // UNTUK PETELUR
   masaPanenTelurAwalHari: { type: Number },
   masaPanenTelurAkhirHari: { type: Number },
   rataRataTelurPerMinggu: { type: Number },
 
-  // Untuk Pedaging
+  // UNTUK PEDAGING
   masaPanenDagingHari: { type: Number },
   rataRataBeratPanenGr: { type: Number },
 
