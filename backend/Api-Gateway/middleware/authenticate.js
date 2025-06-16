@@ -12,8 +12,10 @@ const authenticate = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, jwtSecret);
     req.user = decoded;
+    console.log("Authenticated user:", req.user);
     next();
   } catch (err) {
+    console.error("Token verification failed:", err);
     res.status(403).json({ message: "Invalid token" });
   }
 };

@@ -4,6 +4,7 @@ const { jwtSecret } = require("../config");
 
 // 🔐 Middleware JWT
 const authenticateJWT = async (req, res, next) => {
+  console.log("Authenticating JWT...", token);
   const token = req.cookies.token;
   if (!token) {
     return res
