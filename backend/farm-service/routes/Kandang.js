@@ -10,7 +10,9 @@ router.get("/", authenticateJWT, async (req, res) => {
     const kandang = await Kandang.find();
     res.json(kandang);
   } catch (err) {
-    res.status(500).json({ message: "Gagal mengambil data kandang", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Gagal mengambil data kandang", error: err.message });
   }
 });
 
@@ -21,18 +23,25 @@ router.post("/", authenticateJWT, async (req, res) => {
     await kandangBaru.save();
     res.status(201).json({ message: "Kandang ditambahkan", data: kandangBaru });
   } catch (err) {
-    res.status(400).json({ message: "Gagal menambahkan kandang", error: err.message });
+    res
+      .status(400)
+      .json({ message: "Gagal menambahkan kandang", error: err.message });
   }
 });
 
 // ✏️ PUT update kandang
 router.put("/:id", authenticateJWT, async (req, res) => {
   try {
-    const updated = await Kandang.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updated) return res.status(404).json({ message: "Kandang tidak ditemukan" });
+    const updated = await Kandang.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    if (!updated)
+      return res.status(404).json({ message: "Kandang tidak ditemukan" });
     res.json({ message: "Kandang diperbarui", data: updated });
   } catch (err) {
-    res.status(400).json({ message: "Gagal mengupdate kandang", error: err.message });
+    res
+      .status(400)
+      .json({ message: "Gagal mengupdate kandang", error: err.message });
   }
 });
 
@@ -40,10 +49,13 @@ router.put("/:id", authenticateJWT, async (req, res) => {
 router.delete("/:id", authenticateJWT, async (req, res) => {
   try {
     const deleted = await Kandang.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ message: "Kandang tidak ditemukan" });
+    if (!deleted)
+      return res.status(404).json({ message: "Kandang tidak ditemukan" });
     res.json({ message: "Kandang dihapus" });
   } catch (err) {
-    res.status(400).json({ message: "Gagal menghapus kandang", error: err.message });
+    res
+      .status(400)
+      .json({ message: "Gagal menghapus kandang", error: err.message });
   }
 });
 

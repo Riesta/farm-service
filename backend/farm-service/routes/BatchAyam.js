@@ -21,10 +21,12 @@ async function validateUserExists(userId) {
 // 📄 GET semua batch ayam (dengan populate updatedBy)
 router.get("/", authenticateJWT, async (req, res) => {
   try {
-    const data = await BatchAyam.find().populate("updatedBy");
+    const data = await BatchAyam.find();
     res.json(data);
   } catch (err) {
-    res.status(500).json({ message: "Gagal mengambil data", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Gagal mengambil data", error: err.message });
   }
 });
 
@@ -32,10 +34,13 @@ router.get("/", authenticateJWT, async (req, res) => {
 router.get("/:id", authenticateJWT, async (req, res) => {
   try {
     const data = await BatchAyam.findById(req.params.id).populate("updatedBy");
-    if (!data) return res.status(404).json({ message: "Batch tidak ditemukan" });
+    if (!data)
+      return res.status(404).json({ message: "Batch tidak ditemukan" });
     res.json(data);
   } catch (err) {
-    res.status(500).json({ message: "Gagal mengambil data", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Gagal mengambil data", error: err.message });
   }
 });
 
@@ -47,7 +52,8 @@ router.post("/", authenticateJWT, async (req, res) => {
   try {
     // 🔍 Cek kandang
     const kandang = await Kandang.findById(kandangId);
-    if (!kandang) return res.status(404).json({ message: "Kandang tidak ditemukan" });
+    if (!kandang)
+      return res.status(404).json({ message: "Kandang tidak ditemukan" });
 
     // 🔍 Cek ayam
     const ayam = await Ayam.findById(ayamId);
@@ -55,23 +61,33 @@ router.post("/", authenticateJWT, async (req, res) => {
 
     // 🔍 Validasi user dari auth-service
     const userValid = await validateUserExists(userId);
-    if (!userValid) return res.status(404).json({ message: "User tidak ditemukan" });
+    if (!userValid)
+      return res.status(404).json({ message: "User tidak ditemukan" });
 
     // ❌ Cegah input jika sudah ada batch aktif di kandang tersebut
-    const existingBatch = await BatchAyam.findOne({ kandangId, isActive: true });
+    const existingBatch = await BatchAyam.findOne({
+      kandangId,
+      isActive: true,
+    });
     if (existingBatch) {
       return res.status(400).json({
-        message: "Kandang ini sudah memiliki batch aktif. Tidak dapat menambahkan batch baru.",
+        message:
+          "Kandang ini sudah memiliki batch aktif. Tidak dapat menambahkan batch baru.",
       });
     }
 
     // ✅ Validasi kapasitas kandang (optional jika kamu masih ingin batasi kapasitas)
     const batchLain = await BatchAyam.find({ kandangId, isActive: true });
-    const totalAyamSaatIni = batchLain.reduce((total, batch) => total + batch.jumlahAyam, 0);
+    const totalAyamSaatIni = batchLain.reduce(
+      (total, batch) => total + batch.jumlahAyam,
+      0
+    );
 
     if (totalAyamSaatIni + jumlahAyam > kandang.kapasitas) {
       return res.status(400).json({
-        message: `Kapasitas kandang melebihi batas. Tersisa: ${kandang.kapasitas - totalAyamSaatIni} ekor`,
+        message: `Kapasitas kandang melebihi batas. Tersisa: ${
+          kandang.kapasitas - totalAyamSaatIni
+        } ekor`,
       });
     }
 
@@ -89,10 +105,11 @@ router.post("/", authenticateJWT, async (req, res) => {
 
     res.status(201).json({ message: "Batch ayam ditambahkan", data: batch });
   } catch (err) {
-    res.status(500).json({ message: "Gagal menambahkan batch", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Gagal menambahkan batch", error: err.message });
   }
 });
-
 
 // ✏️ PUT update batch ayam
 router.put("/:id", authenticateJWT, async (req, res) => {
@@ -100,10 +117,12 @@ router.put("/:id", authenticateJWT, async (req, res) => {
 
   try {
     const batch = await BatchAyam.findById(req.params.id);
-    if (!batch) return res.status(404).json({ message: "Batch tidak ditemukan" });
+    if (!batch)
+      return res.status(404).json({ message: "Batch tidak ditemukan" });
 
     const userValid = await validateUserExists(updatedBy);
-    if (!userValid) return res.status(400).json({ message: "User tidak ditemukan" });
+    if (!userValid)
+      return res.status(400).json({ message: "User tidak ditemukan" });
 
     Object.assign(batch, req.body, {
       updatedBy,
@@ -114,7 +133,9 @@ router.put("/:id", authenticateJWT, async (req, res) => {
 
     res.json({ message: "Batch ayam diperbarui", data: batch });
   } catch (err) {
-    res.status(400).json({ message: "Gagal mengupdate batch", error: err.message });
+    res
+      .status(400)
+      .json({ message: "Gagal mengupdate batch", error: err.message });
   }
 });
 
@@ -122,7 +143,8 @@ router.put("/:id", authenticateJWT, async (req, res) => {
 router.delete("/:id", authenticateJWT, async (req, res) => {
   try {
     const batch = await BatchAyam.findById(req.params.id);
-    if (!batch) return res.status(404).json({ message: "Batch tidak ditemukan" });
+    if (!batch)
+      return res.status(404).json({ message: "Batch tidak ditemukan" });
 
     const kandangId = batch.kandangId;
 
@@ -140,7 +162,9 @@ router.delete("/:id", authenticateJWT, async (req, res) => {
 
     res.json({ message: "Batch ayam dihapus dan status kandang diperiksa" });
   } catch (err) {
-    res.status(500).json({ message: "Gagal menghapus batch", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Gagal menghapus batch", error: err.message });
   }
 });
 
