@@ -43,7 +43,7 @@ app.use(
 app.use(
   "/api/product",
   authenticate,
-  setupServiceProxy("/api/product/", "http://localhost:4000/")
+  setupServiceProxy("/api/product/", process.env.PRODUCT_SERVICE_URL)
 );
 
 app.use((req, res, next) => {
