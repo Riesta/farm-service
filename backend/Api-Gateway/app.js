@@ -16,7 +16,7 @@ app.get("/health", (req, res) => {
   res.status(200).json({ status: "OK api gateway belom R.I.P" });
 });
 
-app.use("/api/auth", setupServiceProxy("/api/auth/", "http://localhost:3000/"));
+app.use("/api/auth", setupServiceProxy("/api/auth/", `http://localhost:3000/`));
 app.use(
   "/api/farm",
   authenticate,

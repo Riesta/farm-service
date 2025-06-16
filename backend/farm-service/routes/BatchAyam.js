@@ -4,6 +4,7 @@ const router = express.Router();
 const BatchAyam = require("../models/BatchAyam");
 const Ayam = require("../models/Ayam");
 const Kandang = require("../models/Kandang");
+const User = require("../models/User");
 const { authenticateJWT } = require("../middleware/authenticateJWT");
 
 const AUTH_SERVICE_URL = "http://localhost:3000/api/user";
