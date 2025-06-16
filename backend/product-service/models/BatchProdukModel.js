@@ -20,10 +20,12 @@ const batchProdukSchema = new mongoose.Schema(
     stokAwal: {
       type: Number,
       required: true,
+      min: 0,
     },
     stokSaatIni: {
       type: Number,
       required: true,
+      min: 0,
     },
     status: {
       type: String,

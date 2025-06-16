@@ -1,5 +1,4 @@
 const express = require("express");
-const Produk = require("../models/Produk");
 const { authenticateJWT } = require("../middleware/authenticateJWT");
 const { getAllProduk, getProdukById, addProduk, editProdukById, deleteProdukById } = require("../controllers/ProdukController");
 

@@ -11,6 +11,7 @@ const produkSchema = new mongoose.Schema(
     masaSimpanHari: {
       type: Number,
       required: true,
+      min: 0,
     },
     suhu: {
       min: {

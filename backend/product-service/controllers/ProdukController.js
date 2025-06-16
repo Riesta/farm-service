@@ -1,10 +1,10 @@
-const express = require("express");
-const Produk = require("../models/Produk");
+const Produk = require("../models/ProdukModel");
 
 // 🔍 GET semua data produk
 const getAllProduk = async (req, res) => {
   try {
     const produkList = await Produk.find();
+    
     res.json(produkList);
   } catch (err) {
     res.status(500).json({
@@ -39,6 +39,7 @@ const addProduk = async (req, res) => {
   try {
     const newProduk = new Produk(req.body);
     await newProduk.save();
+    
     res.status(201).json({
       message: "Data produk berhasil ditambahkan",
       data: newProduk,
@@ -59,10 +60,13 @@ const editProdukById = async (req, res) => {
       req.body,
       {
         new: true,
+        runValidators: true,
       }
     );
+    
     if (!updatedProduk)
       return res.status(404).json({ message: "Data produk tidak ditemukan" });
+    
     res.json({
       message: "Data produk berhasil diperbarui",
       data: updatedProduk,
@@ -79,6 +83,7 @@ const editProdukById = async (req, res) => {
 const deleteProdukById = async (req, res) => {
   try {
     const deleted = await Produk.findByIdAndDelete(req.params.id);
+    
     if (!deleted)
       return res.status(404).json({ message: "Data produk tidak ditemukan" });
     res.json({ message: "Data produk berhasil dihapus" });

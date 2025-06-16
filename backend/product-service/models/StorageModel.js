@@ -19,7 +19,7 @@ const storageSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ["aktif", "kosong", "perawatan"],
-      required: true,
+      default: "kosong"
     },
   },
   { timestamps: true }

@@ -1,8 +1,8 @@
 const axios = require("axios");
 const express = require("express");
 const router = express.Router();
-const BatchProduk = require("../models/BatchProduk");
-const Produk = require("../models/Produk");
+const BatchProduk = require("../models/BatchProdukModel");
+const Produk = require("../models/ProdukModel");
 const User = require("../models/User");
 const { authenticateJWT } = require("../middleware/authenticateJWT");
 
