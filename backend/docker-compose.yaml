@@ -1,0 +1,89 @@
+version: "3.8"
+services:
+  mongodb:
+    image: mongo:noble
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+    volumes:
+      - ./data/mongodb:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", 'mongosh --eval ''db.adminCommand("ping")''']
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASS}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USER}:${MONGO_PASS}@mongodb:27017/
+      ME_CONFIG_BASICAUTH: false
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+    container_name: api-gateway
+    restart: always
+    ports:
+      - "6969:6969"
+    environment:
+      - AUTH_SERVICE_URL=http://auth-service:3000/
+      - LIVESTOCK_SERVICE_URL=http://livestock-service:5000/
+      - PRODUCT_SERVICE_URL=http://product-service:4000/
+      - JWT_SECRET=${JWT_SECRET}
+      - API_GATEWAY_PORT=6969
+    depends_on:
+      - auth-service
+      - livestock-service
+      - product-service
+
+  auth-service:
+    build:
+      context: ./auth-service
+    container_name: auth-service
+    restart: always
+    environment:
+      - MONGO_URI=mongodb://${MONGO_USER}:${MONGO_PASS}@mongodb:27017/
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=1h
+      - AUTH_SERVICE_PORT=3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+  livestock-service:
+    build:
+      context: ./livestock-service
+    container_name: livestock-service
+    restart: always
+    environment:
+      - MONGO_URI=mongodb://${MONGO_USER}:${MONGO_PASS}@mongodb:27017/
+      - LIVESTOCK_SERVICE_PORT=5000
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+  product-service:
+    build:
+      context: ./product-service
+    container_name: product-service
+    restart: always
+    environment:
+      - MONGO_URI=mongodb://${MONGO_USER}:${MONGO_PASS}@mongodb:27017/
+      - PRODUCT_SERVICE_PORT=4000
+    depends_on:
+      mongodb:
+        condition: service_healthy
