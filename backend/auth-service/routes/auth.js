@@ -5,6 +5,8 @@ const passport = require("passport");
 const { jwtSecret, jwtExpiresIn } = require("../config");
 const User = require("../models/user");
 
+const authenticateJWT = require("../middleware/authenticate");
+
 const router = express.Router();
 
 // 🔐 Generate JWT
@@ -68,29 +70,17 @@ router.post("/login", async (req, res) => {
     }
 
     const token = generateToken(user);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      samesite: "Strict",
+      maxAge: 60 * 60 * 1000,
+    });
     res.json({ message: "Login successful", token });
   } catch (err) {
     res.status(500).json({ message: "Login failed", error: err.message });
   }
 });
-
-// 🔐 Middleware JWT
-const authenticateJWT = async (req, res, next) => {
-  const token =
-    req.headers.authorization && req.headers.authorization.split(" ")[1];
-  if (!token) return res.status(401).json({ message: "Token not provided" });
-
-  try {
-    const decoded = jwt.verify(token, jwtSecret);
-    const user = await User.findById(decoded.id);
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    req.user = user;
-    next();
-  } catch (err) {
-    res.status(403).json({ message: "Invalid token" });
-  }
-};
 
 // 🔒 Protected route
 router.get("/protected", authenticateJWT, (req, res) => {
@@ -129,6 +119,12 @@ router.get(
       }
 
       const token = generateToken(user);
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: false,
+        samesite: "Strict",
+        maxAge: 60 * 60 * 1000,
+      });
       res.json({
         message: "Google OAuth successful",
         token,
@@ -142,5 +138,9 @@ router.get(
     }
   }
 );
+router.post("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.status(200).json({ message: "Logout berhasil" });
+});
 
 module.exports = router;
