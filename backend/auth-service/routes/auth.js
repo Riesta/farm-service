@@ -11,13 +11,12 @@ const generateToken = (user) => {
   return jwt.sign({ id: user._id }, jwtSecret, { expiresIn: jwtExpiresIn });
 };
 
-// Contoh di auth-service
-router.get("/:id", async (req, res) => {
-  const user = await User.findById(req.params.id);
-  if (!user) return res.status(404).json({ message: "User tidak ditemukan" });
-  res.json(user);
-});
-
+// // Contoh di auth-service
+// router.get("/:id", async (req, res) => {
+//   const user = await User.findById(req.params.id);
+//   if (!user) return res.status(404).json({ message: "User tidak ditemukan" });
+//   res.json(user);
+// });
 
 // 📝 REGISTER USER
 router.post("/register", async (req, res) => {
@@ -77,5 +76,29 @@ const authenticateJWT = async (req, res, next) => {
 router.get("/protected", authenticateJWT, (req, res) => {
   res.json({ message: "This is protected data", user: req.user });
 });
+
+const passport = require("passport");
+require("../config/google"); // file konfigurasi Google strategy
+
+router.get(
+  "/google",
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+  })
+);
+
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { session: false, failureRedirect: "/" }),
+  (req, res) => {
+    const token = generateToken(req.user);
+    res.json({
+      message: "Google OAuth successful",
+      token,
+      username: req.user.username,
+      email: req.user.email,
+    });
+  }
+);
 
 module.exports = router;

@@ -8,6 +8,20 @@ const app = express();
 app.use(bodyParser.json());
 
 connectDB(); // 🔌 Koneksi ke MongoDB Atlas
+
+const session = require("express-session");
+const passport = require("passport");
+
+app.use(
+  session({
+    secret: "oauth_secret",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use("/api/auth", authRoutes);
 
 app.listen(port, () => {
