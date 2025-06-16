@@ -43,14 +43,18 @@ const getBatchProdukById = async (req, res) => {
 // ➕ POST tambah batchProduk
 const addBatchProduk = async (req, res) => {
   try {
-    const {
-      batchAyamId,
-      produkId,
-      storageId,
-      stokAwal,
-      tanggalMasuk,
-      updatedBy,
-    } = req.body;
+    const userHeader = req.headers["x-user"];
+    if (!userHeader) {
+      return res
+        .status(401)
+        .json({ message: "Informasi user tidak ada di header." });
+    }
+
+    const user = JSON.parse(userHeader);
+    const updatedBy = user.id;
+
+    const { batchAyamId, produkId, storageId, stokAwal, tanggalMasuk } =
+      req.body;
 
     const batchProdukData = {
       batchAyamId: batchAyamId,
@@ -65,7 +69,7 @@ const addBatchProduk = async (req, res) => {
     }
 
     const stokSaatIni = stokAwal;
-    
+
     const totalStok = await calculateTotalStokByStorageId(storageId);
     if (stokSaatIni > totalStok) {
       return res
@@ -94,9 +98,19 @@ const addBatchProduk = async (req, res) => {
 // ✏️ PUT update batchProduk by ID
 const editBatchProdukById = async (req, res) => {
   try {
+    const userHeader = req.headers["x-user"];
+    if (!userHeader) {
+      return res
+        .status(401)
+        .json({ message: "Informasi user tidak ada di header." });
+    }
+
+    const user = JSON.parse(userHeader);
+    const updatedBy = user.id;
+
     const { storageId } = req.params;
     const { stokSaatIni } = req.body;
-    
+
     const totalStok = await calculateTotalStokByStorageId(storageId);
     if (stokSaatIni > totalStok) {
       return res
@@ -106,7 +120,7 @@ const editBatchProdukById = async (req, res) => {
 
     const updatedBatchProduk = await BatchProduk.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      { ...req.body, updatedBy: updatedBy },
       {
         new: true,
         runValidators: true,
@@ -176,14 +190,17 @@ const calculateTotalStokByStorageId = async (storageId) => {
 
     return result.length > 0 ? result[0].totalStok : 0;
   } catch (err) {
-    console.error("Error in calculateTotalStokByStorageId (aggregation failed):", err);
+    console.error(
+      "Error in calculateTotalStokByStorageId (aggregation failed):",
+      err
+    );
     throw err;
   }
 };
 
 const updateStorageStatusByStorageId = async (storageId) => {
   if (!mongoose.Types.ObjectId.isValid(storageId)) {
-    throw new Error('Format Storage ID untuk update status tidak valid.');
+    throw new Error("Format Storage ID untuk update status tidak valid.");
   }
   const currentTotalStok = await calculateTotalStokByStorageId(storageId); // Memanggil helper lain
   const newStatus = currentTotalStok > 0 ? "aktif" : "kosong";

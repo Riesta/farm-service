@@ -4,13 +4,12 @@ const router = express.Router();
 const BatchProduk = require("../models/BatchProdukModel");
 const Produk = require("../models/ProdukModel");
 const User = require("../models/User");
-const { authenticateJWT } = require("../middleware/authenticateJWT");
 const { deleteBatchProdukById, editBatchProdukById, addBatchProduk, getBatchProdukById, getAllBatchProduk } = require("../controllers/BatchProdukController");
 
-router.get("/", authenticateJWT, getAllBatchProduk);
-router.get("/:id", authenticateJWT, getBatchProdukById);
-router.post("/", authenticateJWT, addBatchProduk);
-router.put("/:id", authenticateJWT, editBatchProdukById);
-router.delete("/:id", authenticateJWT, deleteBatchProdukById);
+router.get("/", getAllBatchProduk);
+router.get("/:id", getBatchProdukById);
+router.post("/", addBatchProduk);
+router.put("/:id", editBatchProdukById);
+router.delete("/:id", deleteBatchProdukById);
 
 module.exports = router;
