@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const apicache = require("apicache");
 const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
 
 const speedLimiter = require("./middleware/speedLimiter");
 const limiter = require("./middleware/limiter");
@@ -17,6 +18,7 @@ const PORT = process.env.API_GATEWAY_PORT;
 
 app.use(morgan("tiny"));
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(limiter);
 app.use(speedLimiter);
