@@ -9,7 +9,7 @@ const { authenticateJWT } = require("../middleware/authenticateJWT");
 
 const AUTH_SERVICE_URL = "http://localhost:3000/api/user";
 
-// 🔍 Helper untuk validasi user dari auth-service
+//HELPER UNTUK VALIDASI USER DI AUTH-SERVICE
 async function validateUserExists(userId) {
   try {
     const res = await axios.get(`${AUTH_SERVICE_URL}/${userId}`);
@@ -19,7 +19,7 @@ async function validateUserExists(userId) {
   }
 }
 
-// 📄 GET semua batch ayam (dengan populate updatedBy)
+//GET SEMUA
 router.get("/", authenticateJWT, async (req, res) => {
   try {
     const data = await BatchAyam.find().populate("updatedBy");
@@ -31,7 +31,7 @@ router.get("/", authenticateJWT, async (req, res) => {
   }
 });
 
-// 📄 GET satu batch berdasarkan ID
+//GET BY ID
 router.get("/:id", authenticateJWT, async (req, res) => {
   try {
     const data = await BatchAyam.findById(req.params.id).populate("updatedBy");
@@ -45,27 +45,27 @@ router.get("/:id", authenticateJWT, async (req, res) => {
   }
 });
 
-// ➕ POST tambah batch ayam
+//POST
 router.post("/", authenticateJWT, async (req, res) => {
   const { kandangId, ayamId, jumlahAyam } = req.body;
   const userId = req.user.id;
 
   try {
-    // 🔍 Cek kandang
+    //CEK KANDANG
     const kandang = await Kandang.findById(kandangId);
     if (!kandang)
       return res.status(404).json({ message: "Kandang tidak ditemukan" });
 
-    // 🔍 Cek ayam
+    //CEK AYAM
     const ayam = await Ayam.findById(ayamId);
     if (!ayam) return res.status(404).json({ message: "Ayam tidak ditemukan" });
 
-    // 🔍 Validasi user dari auth-service
+    //AUTH SERVICE
     const userValid = await validateUserExists(userId);
     if (!userValid)
       return res.status(404).json({ message: "User tidak ditemukan" });
 
-    // ❌ Cegah input jika sudah ada batch aktif di kandang tersebut
+    //CEGAH INPUT JIKA KANDANG AKTIF
     const existingBatch = await BatchAyam.findOne({
       kandangId,
       isActive: true,
@@ -77,7 +77,7 @@ router.post("/", authenticateJWT, async (req, res) => {
       });
     }
 
-    // ✅ Validasi kapasitas kandang (optional jika kamu masih ingin batasi kapasitas)
+    //VALIDASI KAPASITAS KANDANG
     const batchLain = await BatchAyam.find({ kandangId, isActive: true });
     const totalAyamSaatIni = batchLain.reduce(
       (total, batch) => total + batch.jumlahAyam,
@@ -92,7 +92,7 @@ router.post("/", authenticateJWT, async (req, res) => {
       });
     }
 
-    // 🐔 Simpan batch
+    //SIMPAN BATCH
     const batch = new BatchAyam({
       ...req.body,
       updatedBy: userId,
@@ -101,7 +101,7 @@ router.post("/", authenticateJWT, async (req, res) => {
     });
     await batch.save();
 
-    // 🔄 Update kandang jadi aktif
+    //UPDATE STATUS AKTIF
     await Kandang.findByIdAndUpdate(kandangId, { status: "aktif" });
 
     res.status(201).json({ message: "Batch ayam ditambahkan", data: batch });
@@ -112,7 +112,7 @@ router.post("/", authenticateJWT, async (req, res) => {
   }
 });
 
-// ✏️ PUT update batch ayam
+//PUT 
 router.put("/:id", authenticateJWT, async (req, res) => {
   const updatedBy = req.user.id;
 
@@ -140,7 +140,7 @@ router.put("/:id", authenticateJWT, async (req, res) => {
   }
 });
 
-// ❌ DELETE batch ayam
+//DELETE
 router.delete("/:id", authenticateJWT, async (req, res) => {
   try {
     const batch = await BatchAyam.findById(req.params.id);
