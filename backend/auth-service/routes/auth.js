@@ -11,13 +11,12 @@ const generateToken = (user) => {
   return jwt.sign({ id: user._id }, jwtSecret, { expiresIn: jwtExpiresIn });
 };
 
-// Contoh di auth-service
-router.get("/:id", async (req, res) => {
-  const user = await User.findById(req.params.id);
-  if (!user) return res.status(404).json({ message: "User tidak ditemukan" });
-  res.json(user);
-});
-
+// // Contoh di auth-service
+// router.get("/:id", async (req, res) => {
+//   const user = await User.findById(req.params.id);
+//   if (!user) return res.status(404).json({ message: "User tidak ditemukan" });
+//   res.json(user);
+// });
 
 // 📝 REGISTER USER
 router.post("/register", async (req, res) => {
