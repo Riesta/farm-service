@@ -24,17 +24,22 @@ const batchProdukSchema = new mongoose.Schema(
     },
     stokSaatIni: {
       type: Number,
-      required: true,
       min: 0,
     },
     status: {
       type: String,
       enum: ["tersedia", "kadaluarsa", "dikarantina", "habis"],
       required: true,
+      default: "tersedia",
     },
     tanggalMasuk: {
       type: Date,
       default: Date.now,
+      required: true,
+    },
+    updatedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
   },
