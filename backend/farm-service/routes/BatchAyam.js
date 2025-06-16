@@ -112,7 +112,7 @@ router.post("/", authenticateJWT, async (req, res) => {
   }
 });
 
-//PUT 
+//PUT BY ID
 router.put("/:id", authenticateJWT, async (req, res) => {
   const updatedBy = req.user.id;
 
