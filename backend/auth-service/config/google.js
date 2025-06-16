@@ -13,17 +13,24 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       try {
         const email = profile.emails[0].value;
-        const username = profile.displayName;
+        const name = profile.displayName;
+        const picture = profile.photos[0].value;
+        const providerId = profile.id;
 
-        let user = await User.findOne({ username });
+        // Cari user berdasarkan email (bukan username, agar unik)
+        let user = await User.findOne({ email });
 
         if (!user) {
-          // Gunakan password random untuk user yang login via Google
-          const dummyPassword = "oauth_google_user";
+          // Buat user baru untuk login via Google
           user = await User.create({
-            username,
-            password: dummyPassword,
             email,
+            name,
+            role: "employee", // default role untuk Google user
+            profilePicture: picture,
+            oauth: {
+              provider: "google",
+              providerId: providerId,
+            },
           });
         }
 
@@ -35,11 +42,16 @@ passport.use(
   )
 );
 
+// Serialize & Deserialize
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
 passport.deserializeUser(async (id, done) => {
-  const user = await User.findById(id);
-  done(null, user);
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (err) {
+    done(err, null);
+  }
 });

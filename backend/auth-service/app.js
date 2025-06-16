@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/user")
 const connectDB = require("./config/db");
 const { port } = require("./config");
 
@@ -23,6 +24,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
 
 app.listen(port, () => {
   console.log(`Server Berjalan pada port ${port}`);

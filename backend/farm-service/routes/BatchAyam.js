@@ -6,7 +6,7 @@ const Ayam = require("../models/Ayam");
 const Kandang = require("../models/Kandang");
 const { authenticateJWT } = require("../middleware/authenticateJWT");
 
-const AUTH_SERVICE_URL = "http://localhost:3000/api/auth";
+const AUTH_SERVICE_URL = "http://localhost:3000/api/user";
 
 // 🔍 Helper untuk validasi user dari auth-service
 async function validateUserExists(userId) {
