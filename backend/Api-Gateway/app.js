@@ -35,6 +35,11 @@ app.use(
   cache(durasiCache),
   setupServiceProxy("/api/farm/", process.env.FARM_SERVICE_URL)
 );
+app.use(
+  "/api/product",
+  authenticate,
+  setupServiceProxy("/api/product/", "http://localhost:4000/")
+);
 
 app.use((req, res, next) => {
   res.status(404).json({ message: "Not Found" });
