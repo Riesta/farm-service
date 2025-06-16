@@ -1,13 +1,13 @@
 const express = require("express");
-const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser"); 
 const authRoutes = require("./routes/auth");
-const userRoutes = require("./routes/user")
+const userRoutes = require("./routes/user");
 const connectDB = require("./config/db");
 const { port } = require("./config");
 
 const app = express();
-app.use(bodyParser.json());
-
+app.use(express.json());
+app.use(cookieParser());
 connectDB(); // 🔌 Koneksi ke MongoDB Atlas
 
 const session = require("express-session");
