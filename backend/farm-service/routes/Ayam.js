@@ -1,6 +1,6 @@
 const express = require("express");
 const Ayam = require("../models/Ayam");
-const { authenticateJWT } = require("../middleware/authenticateJWT");
+// const { authenticateJWT } = require("../middleware/authenticateJWT");
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
 });
 
 // ➕ POST tambah ayam
-router.post("/", authenticateJWT, async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const newAyam = new Ayam(req.body);
     await newAyam.save();
@@ -32,7 +32,7 @@ router.post("/", authenticateJWT, async (req, res) => {
 });
 
 // ✏️ PUT update ayam by ID
-router.put("/:id", authenticateJWT, async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     const updatedAyam = await Ayam.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -48,7 +48,7 @@ router.put("/:id", authenticateJWT, async (req, res) => {
 });
 
 // ❌ DELETE ayam by ID
-router.delete("/:id", authenticateJWT, async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const deleted = await Ayam.findByIdAndDelete(req.params.id);
     if (!deleted)

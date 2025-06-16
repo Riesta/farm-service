@@ -1,11 +1,11 @@
 const express = require("express");
 const Kandang = require("../models/Kandang");
-const { authenticateJWT } = require("../middleware/authenticateJWT");
+// const { authenticateJWT } = require("../middleware/authenticateJWT");
 
 const router = express.Router();
 
 //GET
-router.get("/", authenticateJWT, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const kandang = await Kandang.find();
     res.json(kandang);
@@ -17,7 +17,7 @@ router.get("/", authenticateJWT, async (req, res) => {
 });
 
 //POST
-router.post("/", authenticateJWT, async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const kandangBaru = new Kandang(req.body);
     await kandangBaru.save();
@@ -30,7 +30,7 @@ router.post("/", authenticateJWT, async (req, res) => {
 });
 
 //PUT
-router.put("/:id", authenticateJWT, async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     const updated = await Kandang.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -46,7 +46,7 @@ router.put("/:id", authenticateJWT, async (req, res) => {
 });
 
 //DELETE
-router.delete("/:id", authenticateJWT, async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const deleted = await Kandang.findByIdAndDelete(req.params.id);
     if (!deleted)
