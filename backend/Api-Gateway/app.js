@@ -1,5 +1,8 @@
 require("dotenv").config();
 
+const https = require("https");
+const fs = require("fs");
+
 const express = require("express");
 const apicache = require("apicache");
 const morgan = require("morgan");
@@ -47,6 +50,14 @@ app.use((req, res, next) => {
   res.status(404).json({ message: "Not Found" });
 });
 
-app.listen(PORT, () => {
-  console.log(`API Gateway berjalan di port ${PORT}`);
+const privateKey = fs.readFileSync("./key.pem", "utf8");
+const certificate = fs.readFileSync("./cert.pem", "utf8");
+const credentials = { key: privateKey, cert: certificate };
+const httpsServer = https.createServer(credentials, app);
+
+httpsServer.listen(PORT, () => {
+  console.log(`API Gateway berjalan aman di port ${PORT} (HTTPS)`);
 });
+// app.listen(PORT, () => {
+//   console.log(`API Gateway berjalan di port ${PORT}`);
+// });
