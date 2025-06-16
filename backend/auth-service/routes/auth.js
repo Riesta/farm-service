@@ -78,4 +78,28 @@ router.get("/protected", authenticateJWT, (req, res) => {
   res.json({ message: "This is protected data", user: req.user });
 });
 
+const passport = require("passport");
+require("../config/google"); // file konfigurasi Google strategy
+
+router.get(
+  "/google",
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+  })
+);
+
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { session: false, failureRedirect: "/" }),
+  (req, res) => {
+    const token = generateToken(req.user);
+    res.json({
+      message: "Google OAuth successful",
+      token,
+      username: req.user.username,
+      email: req.user.email,
+    });
+  }
+);
+
 module.exports = router;
