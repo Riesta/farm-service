@@ -22,7 +22,7 @@ async function validateUserExists(userId) {
 // 📄 GET semua batch ayam (dengan populate updatedBy)
 router.get("/", authenticateJWT, async (req, res) => {
   try {
-    const data = await BatchAyam.find();
+    const data = await BatchAyam.find().populate("updatedBy");
     res.json(data);
   } catch (err) {
     res
