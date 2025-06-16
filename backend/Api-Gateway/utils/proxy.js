@@ -8,15 +8,15 @@ const setupServiceProxy = (path, targetUrl) => {
     target: targetUrl,
     changeOrigin: true,
     pathRewrite: {
-      "^/": `${path}`,
-      on: {
-        proxyReq: fixRequestBody,
-        error: (err, req, res) => {
-          console.error(`Proxy error: ${err.message}`);
-          res
-            .status(500)
-            .json({ error: "Proxy error occurred", details: err.message });
-        },
+      "^/": `${path}`, 
+    },
+    on: {
+      proxyReq: fixRequestBody,
+      error: (err, req, res) => {
+        console.error(`Proxy error: ${err.message}`);
+        res
+          .status(500)
+          .json({ error: "Proxy error occurred", details: err.message });
       },
     },
   });
