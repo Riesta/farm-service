@@ -39,11 +39,10 @@ services:
       - "6969:6969"
     environment:
       - AUTH_SERVICE_URL=http://auth-service:3000/
-      - LIVESTOCK_SERVICE_URL=http://localhost:5000/
-      - PRODUCT_SERVICE_URL=http://localhost:4000/
+      - LIVESTOCK_SERVICE_URL=http://livestock-service:5000/
+      - PRODUCT_SERVICE_URL=http://product-service:4000/
       - JWT_SECRET=${JWT_SECRET}
-      - API_GATEWAY_PORT=6969
-      - CACHE_DURATION=5 minutes
+      - API_GATEWAY_PORT=6969 
     depends_on:
       - auth-service
       - livestock-service

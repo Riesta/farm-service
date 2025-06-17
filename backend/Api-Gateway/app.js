@@ -4,7 +4,6 @@ const https = require("https");
 const fs = require("fs");
 
 const express = require("express");
-const apicache = require("apicache");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 
@@ -14,8 +13,6 @@ const authenticate = require("./middleware/authenticate");
 const setupServiceProxy = require("./utils/proxy");
 
 const app = express();
-const cache = apicache.middleware;
-const durasiCache = process.env.CACHE_DURATION;
 
 const PORT = process.env.API_GATEWAY_PORT;
 
@@ -37,7 +34,6 @@ app.use(
 app.use(
   "/api/farm",
   authenticate,
-  cache(durasiCache),
   setupServiceProxy("/api/farm/", process.env.LIVESTOCK_SERVICE_URL)
 );
 app.use(

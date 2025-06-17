@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const BatchProduk = require("../models/BatchProdukModel");
 const Produk = require("../models/ProdukModel");
-const User = require("../models/User");
+const User = require("../models/user");
 const { deleteBatchProdukById, editBatchProdukById, addBatchProduk, getBatchProdukById, getAllBatchProduk } = require("../controllers/BatchProdukController");
 
 router.get("/", getAllBatchProduk);
