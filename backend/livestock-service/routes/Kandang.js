@@ -40,17 +40,40 @@ router.put("/:id", async (req, res) => {
       return res.status(404).json({ message: "Kandang tidak ditemukan" });
 
     // cari ayam yang tipenya sama dengan jenis kandang
-    const ayam = Ayam.findOne({ tipe: jenisKandang });
-    if (updated.suhu < ayam.besar.suhu.min || updated.suhu > ayam.besar.suhu.max) {
-      updated.suhuAlert = "SUHU DI LUAR JANGKAUAN!";
-    } else if (updated.kelembaban < ayam.besar.kelembaban.min || updated.kelembaban > ayam.besar.kelembaban.max) {
-      updated.kelembabanAlert = "KELEMBABAN DI LUAR JANGKAUAN!";
+    // pada kasus ini kami belum bisa mengecek suhu sesuai umur yang ada pada BatchAyam
+    const ayam = await Ayam.findOne({ tipe: updated.jenisKandang });
+    const suhuRange = ayam.besar.suhu.min + " --- " + ayam.besar.kelembaban.max;
+    const kelembabanRange = ayam.besar.kelembaban.min + " --- " + ayam.besar.kelembaban.max;
+
+    if (updated.suhu < ayam.besar.suhu.min) {
+      updated.suhuAlert = "SUHU DI BAWAH JANGKAUAN! " + suhuRange;
+    } else if (updated.suhu > ayam.besar.suhu.max) {
+      updated.suhuAlert = "SUHU DI ATAS JANGKAUAN! " + suhuRange;
     } else {
       updated.suhuAlert = "suhu aman";
+    }
+    
+    if (updated.kelembaban < ayam.besar.kelembaban.min) {
+      updated.kelembabanAlert = "KELEMBABAN DI BAWAH JANGKAUAN! " + kelembabanRange;
+    } else if (updated.kelembaban > ayam.besar.kelembaban.min) {
+      updated.kelembabanAlert = "KELEMBABAN DI ATAS JANGKAUAN! " + kelembabanRange;
+    } else {
       updated.kelembabanAlert = "kelembaban aman";
     }
 
-    const newUpdated = updated.save();
+    if (updated.suhuAlert !== "suhu aman") {
+      console.log(updated.suhuAlert);
+    }
+
+    if (updated.kelembabanAlert !== "kelembaban aman") {
+      console.log(updated.kelembabanAlert);
+    }
+
+    const newUpdated = await Kandang.findByIdAndUpdate(req.params.id, updated, {
+      new: true,
+    });
+    if (!newUpdated)
+      return res.status(404).json({ message: "Kandang tidak ditemukan" });
 
     res.json({ message: "Kandang diperbarui", data: newUpdated });
   } catch (err) {
