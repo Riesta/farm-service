@@ -32,9 +32,9 @@ app.use(
   setupServiceProxy("/api/auth/", process.env.AUTH_SERVICE_URL)
 );
 app.use(
-  "/api/farm",
+  "/api/livestock",
   authenticate,
-  setupServiceProxy("/api/farm/", process.env.LIVESTOCK_SERVICE_URL)
+  setupServiceProxy("/api/livestock/", process.env.LIVESTOCK_SERVICE_URL)
 );
 app.use(
   "/api/product",
