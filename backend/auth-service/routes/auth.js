@@ -86,7 +86,7 @@ router.post("/login", loginRules(), validate, async (req, res) => {
 });
 
 // 🔒 Protected route
-router.get("/protected", authenticateJWT, (req, res) => {
+router.get("/protected", (req, res) => {
   res.json({ message: "This is protected data", user: req.user });
 });
 

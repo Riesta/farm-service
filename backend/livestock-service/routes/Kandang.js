@@ -1,5 +1,6 @@
 const express = require("express");
 const Kandang = require("../models/Kandang");
+const Ayam = require("../models/Ayam");
 // const { authenticateJWT } = require("../middleware/authenticateJWT");
 
 const router = express.Router();
@@ -37,7 +38,21 @@ router.put("/:id", async (req, res) => {
     });
     if (!updated)
       return res.status(404).json({ message: "Kandang tidak ditemukan" });
-    res.json({ message: "Kandang diperbarui", data: updated });
+
+    // cari ayam yang tipenya sama dengan jenis kandang
+    const ayam = Ayam.findOne({ tipe: jenisKandang });
+    if (updated.suhu < ayam.besar.suhu.min || updated.suhu > ayam.besar.suhu.max) {
+      updated.suhuAlert = "SUHU DI LUAR JANGKAUAN!";
+    } else if (updated.kelembaban < ayam.besar.kelembaban.min || updated.kelembaban > ayam.besar.kelembaban.max) {
+      updated.kelembabanAlert = "KELEMBABAN DI LUAR JANGKAUAN!";
+    } else {
+      updated.suhuAlert = "suhu aman";
+      updated.kelembabanAlert = "kelembaban aman";
+    }
+
+    const newUpdated = updated.save();
+
+    res.json({ message: "Kandang diperbarui", data: newUpdated });
   } catch (err) {
     res
       .status(400)

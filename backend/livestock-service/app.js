@@ -6,6 +6,7 @@ const connectDB = require("./config/db");
 const ayamRoutes = require("./routes/Ayam");
 const kandangRoutes = require("./routes/Kandang");
 const batchAyamRoutes = require("./routes/BatchAyam");
+const mqttIoTRoutes = require("./routes/MqttIoT");
 
 // Load environment variables
 dotenv.config();
@@ -23,6 +24,7 @@ connectDB();
 app.use("/api/farm/ayam", ayamRoutes);
 app.use("/api/farm/kandang", kandangRoutes);
 app.use("/api/farm/batchAyam", batchAyamRoutes);
+app.use("/api/farm/iot", mqttIoTRoutes);
 
 // Port dan jalankan server
 const PORT = process.env.PORT || 5000;

@@ -32,6 +32,18 @@ const kandangSchema = new mongoose.Schema(
       type: Number,
       required: false,
     },
+    suhuAlert: {
+      type: String,
+      required: false,
+    },
+    kelembabanAlert: {
+      type: String,
+      required: false,
+    },
+    cahayaAlert: {
+      type: String,
+      required: false,
+    }
   },
   {
     timestamps: true,
