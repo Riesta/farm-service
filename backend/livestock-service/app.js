@@ -21,10 +21,10 @@ app.use(express.json());
 connectDB();
 
 // Routing utama
-app.use("/api/farm/ayam", ayamRoutes);
-app.use("/api/farm/kandang", kandangRoutes);
-app.use("/api/farm/batchAyam", batchAyamRoutes);
-app.use("/api/farm/iot", mqttIoTRoutes);
+app.use("/api/livestock/ayam", ayamRoutes);
+app.use("/api/livestock/kandang", kandangRoutes);
+app.use("/api/livestock/batchAyam", batchAyamRoutes);
+app.use("/api/livestock/iot", mqttIoTRoutes);
 
 // Port dan jalankan server
 const PORT = process.env.LIVESTOCK_SERVICE_PORT || 5000;
