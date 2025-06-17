@@ -1,40 +1,15 @@
 const mqtt = require("mqtt");
 const express = require("express");
-const mongoose = require("mongoose");
 const { ObjectId } = require("mongodb");
-const app = express();
-const port = 3000;
+const router = express.Router();
 
 // MQTT & TOPIK
 const brokerUrl = "mqtt://broker.emqx.io";
 const topic = "peternakan/kandang_ayam";
 const client = mqtt.connect(brokerUrl);
 
-// KONEKSI MONGODB
-const mongoUri =
-  "mongodb+srv://ramadanrizky593:ridan123@cluster0.aigm3ix.mongodb.net/farmDB";
-mongoose
-  .connect(mongoUri)
-  .then(() => console.log("✅ Terhubung ke MongoDB"))
-  .catch((err) => console.error("❌ Gagal terhubung MongoDB:", err.message));
-
 // SKEMA MONGOOSE
-const kandangSchema = new mongoose.Schema(
-  {
-    jenisKandang: String,
-    nama: String,
-    kapasitas: Number,
-    status: String,
-    suhu: Number,
-    kelembaban: Number,
-    cahaya: Number,
-    createdAt: Date,
-    updatedAt: Date,
-  },
-  { collection: "kandangs" }
-);
-
-const Kandang = mongoose.model("Kandang", kandangSchema);
+const Kandang = require("../models/Kandang");
 
 // VARIABEL SIKLUS
 let dataKandang = {};
@@ -122,7 +97,7 @@ client.on("message", async (topic, message) => {
 });
 
 // ENDPOINT UNTUK MELIHAT DATA TERAKHIR
-app.get("/kandang", (req, res) => {
+router.get("/kandang", (req, res) => {
   if (lastFullCycleList.length === 0) {
     return res.status(404).json({ message: "Data belum tersedia" });
   }
@@ -133,7 +108,4 @@ app.get("/kandang", (req, res) => {
   });
 });
 
-// JALANKAN SERVER EXPRESS
-app.listen(port, () => {
-  console.log(`🚀 Server Express berjalan di http://localhost:${port}/kandang`);
-});
+module.exports = router;
