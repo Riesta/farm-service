@@ -22,6 +22,8 @@ spec:
               value: "mongodb://root:ridanKetuaBayangan@mongodb:27017/farmDb?authSource=admin"
             - name: AUTH_SERVICE_PORT
               value: "3000"
+            - name: JWT_EXPIRES_IN
+              value: "1h"
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
