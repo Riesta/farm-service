@@ -11,7 +11,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "API Gateway for Farm Service",
+  "description": "API Gateway for Livestock Service",
   "dependencies": {
     "apicache": "^1.6.3",
     "cookie-parser": "^1.4.7",
