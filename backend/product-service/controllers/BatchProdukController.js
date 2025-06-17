@@ -1,11 +1,14 @@
 const { mongoose } = require("mongoose");
 const BatchProduk = require("../models/BatchProdukModel");
 const Storage = require("../models/StorageModel");
+const BatchAyam = require("../models/BatchAyamModel");
+const Produk = require("../models/ProdukModel");
+const { ObjectId } = require("mongodb");
 
 // 🔍 GET semua data batchProduk
 const getAllBatchProduk = async (req, res) => {
   try {
-    const batchProdukList = await BatchProduk.find().populate();
+    const batchProdukList = await BatchProduk.find();
 
     res.json(batchProdukList);
   } catch (err) {
@@ -20,8 +23,10 @@ const getAllBatchProduk = async (req, res) => {
 const getBatchProdukById = async (req, res) => {
   try {
     const batchProduk = await BatchProduk.findById(req.params.id).populate(
-      "updatedBy"
-    );
+      ["batchAyamId",
+      "storageId",
+      "updatedBy"]
+    ).exec();
 
     if (!batchProduk)
       return res
@@ -57,11 +62,11 @@ const addBatchProduk = async (req, res) => {
       req.body;
 
     const batchProdukData = {
-      batchAyamId: batchAyamId,
-      produkId: produkId,
-      storageId: storageId,
+      batchAyamId: new ObjectId(batchAyamId),
+      produkId: new ObjectId(produkId),
+      storageId: new ObjectId(storageId),
       stokAwal: stokAwal,
-      updatedBy: updatedBy,
+      updatedBy: new ObjectId(updatedBy),
     };
 
     if (tanggalMasuk) {
@@ -70,8 +75,8 @@ const addBatchProduk = async (req, res) => {
 
     const stokSaatIni = stokAwal;
 
-    const totalStok = await calculateTotalStokByStorageId(storageId);
-    if (stokSaatIni > totalStok) {
+    const storage = await Storage.findById(storageId);
+    if (stokSaatIni > storage.kapasitas) {
       return res
         .status(404)
         .json({ message: "Stok tidak boleh melebihi kapasitas storage!" });
