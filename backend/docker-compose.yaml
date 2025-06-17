@@ -36,13 +36,13 @@ services:
     container_name: api-gateway
     restart: always
     ports:
-      - "6969:6969"
+      - "7000:7000"
     environment:
       - AUTH_SERVICE_URL=http://auth-service:3000/
       - LIVESTOCK_SERVICE_URL=http://livestock-service:5000/
       - PRODUCT_SERVICE_URL=http://product-service:4000/
       - JWT_SECRET=${JWT_SECRET}
-      - API_GATEWAY_PORT=6969
+      - API_GATEWAY_PORT=7000
     depends_on:
       - auth-service
       - livestock-service
