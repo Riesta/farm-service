@@ -24,7 +24,7 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_USER}
       ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASS}
-      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USER}:${MONGO_PASS}@mongodb:27017/
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USER}:${MONGO_PASS}@mongodb:27017/farmDb?authSource=admin
       ME_CONFIG_BASICAUTH: false
     depends_on:
       mongodb:
@@ -42,7 +42,7 @@ services:
       - LIVESTOCK_SERVICE_URL=http://livestock-service:5000/
       - PRODUCT_SERVICE_URL=http://product-service:4000/
       - JWT_SECRET=${JWT_SECRET}
-      - API_GATEWAY_PORT=6969 
+      - API_GATEWAY_PORT=6969
     depends_on:
       - auth-service
       - livestock-service
@@ -54,14 +54,12 @@ services:
     container_name: auth-service
     restart: always
     environment:
-      - MONGO_URI=mongodb://${MONGO_USER}:${MONGO_PASS}@mongodb:27017/
+      - MONGO_URI=mongodb://${MONGO_USER}:${MONGO_PASS}@mongodb:27017/farmDb?authSource=admin
       - JWT_SECRET=${JWT_SECRET}
       - JWT_EXPIRES_IN=1h
       - AUTH_SERVICE_PORT=3000
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-    ports:
-      - "3000:3000"
     depends_on:
       mongodb:
         condition: service_healthy
@@ -72,7 +70,7 @@ services:
     container_name: livestock-service
     restart: always
     environment:
-      - MONGO_URI=mongodb://${MONGO_USER}:${MONGO_PASS}@mongodb:27017/
+      - MONGO_URI=mongodb://${MONGO_USER}:${MONGO_PASS}@mongodb:27017/farmDb?authSource=admin
       - LIVESTOCK_SERVICE_PORT=5000
     depends_on:
       mongodb:
@@ -84,7 +82,7 @@ services:
     container_name: product-service
     restart: always
     environment:
-      - MONGO_URI=mongodb://${MONGO_USER}:${MONGO_PASS}@mongodb:27017/
+      - MONGO_URI=mongodb://${MONGO_USER}:${MONGO_PASS}@mongodb:27017/farmDb?authSource=admin
       - PRODUCT_SERVICE_PORT=4000
     depends_on:
       mongodb:
