@@ -35,7 +35,15 @@ router.get("/:id", async (req, res) => {
 //POST
 router.post("/", async (req, res) => {
   const { kandangId, ayamId, jumlahAyam } = req.body;
-  const userId = req.user.id;
+  const userHeader = req.headers["x-user"];
+  if (!userHeader) {
+    return res
+      .status(401)
+      .json({ message: "Informasi user tidak ada di header." });
+  }
+
+  const user = JSON.parse(userHeader);
+  const userId = user.id;
 
   try {
     //CEK KANDANG
