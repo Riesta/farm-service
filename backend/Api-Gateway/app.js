@@ -38,7 +38,7 @@ app.use(
   "/api/farm",
   authenticate,
   cache(durasiCache),
-  setupServiceProxy("/api/farm/", process.env.FARM_SERVICE_URL)
+  setupServiceProxy("/api/farm/", process.env.LIVESTOCK_SERVICE_URL)
 );
 app.use(
   "/api/product",

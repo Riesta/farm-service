@@ -27,5 +27,5 @@ app.use("/api/farm/batchAyam", batchAyamRoutes);
 app.use("/api/farm/iot", mqttIoTRoutes);
 
 // Port dan jalankan server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.LIVESTOCK_SERVICE_PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
