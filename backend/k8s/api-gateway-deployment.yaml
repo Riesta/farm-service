@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: pencarisalmon/api-gateway:v1
+          ports:
+            - containerPort: 7000
+          env:
+            - name: AUTH_SERVICE_URL
+              value: "http://auth-service:3000"
+            - name: LIVESTOCK_SERVICE_URL
+              value: "http://livestock-service:5000"
+            - name: PRODUCT_SERVICE_URL
+              value: "http://product-service:4000"
+            - name: API_GATEWAY_PORT
+              value: "7000"
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: jwt-secret
